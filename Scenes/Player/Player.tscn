@@ -1,0 +1,114 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://Scenes/Player/Player.gd" type="Script" id=1]
+[ext_resource path="res://Art/Player/player_sheet_Idle_0.png" type="Texture" id=2]
+[ext_resource path="res://Art/Player/player_sheet_Idle_1.png" type="Texture" id=3]
+[ext_resource path="res://Art/Player/player_sheet_Idle_2.png" type="Texture" id=4]
+[ext_resource path="res://Art/Player/player_sheet_Idle_3.png" type="Texture" id=5]
+[ext_resource path="res://Art/Player/player_sheet_Walk_0.png" type="Texture" id=6]
+[ext_resource path="res://Art/Player/player_sheet_Walk_1.png" type="Texture" id=7]
+[ext_resource path="res://Art/Player/player_sheet_Walk_2.png" type="Texture" id=8]
+[ext_resource path="res://Art/Player/player_sheet_Walk_3.png" type="Texture" id=9]
+[ext_resource path="res://Art/Player/player_sheet_Jump_0.png" type="Texture" id=10]
+[ext_resource path="res://Art/Player/player_sheet_Jump_1.png" type="Texture" id=11]
+[ext_resource path="res://Art/Player/player_sheet_Jump_2.png" type="Texture" id=12]
+[ext_resource path="res://Art/Player/player_sheet_Shoot_0.png" type="Texture" id=13]
+[ext_resource path="res://Art/Player/player_sheet_Shoot_1.png" type="Texture" id=14]
+[ext_resource path="res://Art/Player/player_sheet_Shoot_2.png" type="Texture" id=15]
+[ext_resource path="res://Art/Player/player_sheet_Shoot_3.png" type="Texture" id=16]
+[ext_resource path="res://Scenes/Player/Camera2D.gd" type="Script" id=17]
+[ext_resource path="res://Scenes/Props/Textbox.tscn" type="PackedScene" id=18]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
+"loop": false,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ) ],
+"loop": true,
+"name": "shoot",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 7 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 4, 7 )
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+attack = true
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "shoot"
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1 )
+shape = SubResource( 2 )
+
+[node name="RayCast2D2" type="RayCast2D" parent="."]
+position = Vector2( -4, 0 )
+enabled = true
+cast_to = Vector2( 0, 9 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 4, 0 )
+enabled = true
+cast_to = Vector2( 0, 9 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+smoothing_enabled = true
+smoothing_speed = 15.0
+drag_margin_top = 0.4
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource( 17 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, 1 )
+shape = SubResource( 3 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -40.0
+
+[node name="LeftRaycast" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( -7, 0 )
+
+[node name="RightRaycast" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 7, 0 )
+
+[node name="Textbox" parent="." instance=ExtResource( 18 )]
+position = Vector2( -50, -50 )
+
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 7, -4 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+[connection signal="animation_finished" from="Sprite" to="." method="_on_Sprite_animation_finished"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]

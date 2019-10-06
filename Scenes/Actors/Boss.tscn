@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scenes/Actors/Boss.gd" type="Script" id=1]
+[ext_resource path="res://Art/Boss/boss1.png" type="Texture" id=2]
+[ext_resource path="res://Art/Boss/boss2.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/Actors/CoolantTank.tscn" type="PackedScene" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 32, 32 )
+
+[node name="Boss" type="Area2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="CoolingTanks" type="Node2D" parent="."]
+
+[node name="CoolantTank" parent="CoolingTanks" instance=ExtResource( 4 )]
+position = Vector2( 144, 24 )
+
+[node name="CoolantTank2" parent="CoolingTanks" instance=ExtResource( 4 )]
+position = Vector2( 144, -56 )
+
+[node name="CoolantTank3" parent="CoolingTanks" instance=ExtResource( 4 )]
+position = Vector2( 64, 24 )
+
+[node name="CoolantTank4" parent="CoolingTanks" instance=ExtResource( 4 )]
+position = Vector2( 64, -56 )
+
+[node name="Shoot_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 32, 0 )
+[connection signal="timeout" from="Shoot_timer" to="." method="_on_Shoot_timer_timeout"]
