@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Scenes/Game_scripts/World.gd" type="Script" id=1]
 [ext_resource path="res://Art/Tileset.png" type="Texture" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Scenes/Actors/Boss.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Scenes/Props/Checkpoint.tscn" type="PackedScene" id=14]
 [ext_resource path="res://Scenes/Win.gd" type="Script" id=15]
+[ext_resource path="res://Scenes/Actors/Lift.tscn" type="PackedScene" id=16]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
@@ -381,14 +382,15 @@ position = Vector2( 1200, 384 )
 position = Vector2( 712, 96 )
 
 [node name="Win" type="Area2D" parent="."]
-position = Vector2( 600, 468 )
+position = Vector2( 600, 472 )
 script = ExtResource( 15 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Win"]
+position = Vector2( -5.63892, -1.56085 )
 shape = SubResource( 12 )
+
+[node name="Lift" parent="Win" instance=ExtResource( 16 )]
+position = Vector2( -24, 16 )
 [connection signal="body_entered" from="Powerups/Wall_jump_powerUp" to="Player" method="_on_Wall_jump_powerUp_body_entered"]
 [connection signal="body_entered" from="Powerups/WalkPowerup" to="Player" method="_on_WalkPowerup_body_entered"]
 [connection signal="body_entered" from="Powerups/JumpPower" to="Player" method="_on_JumpPower_body_entered"]
