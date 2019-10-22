@@ -55,12 +55,14 @@ func _ready():
 	max_jump_velocity = -sqrt(2 * grav * max_jump_height)
 	min_jump_velocity = -sqrt(2 * grav * min_jump_height)
 
-func _physics_process(delta):
-	if walk && !cut_scene:
-		get_input()
-	animation_player()
+func _apply_gravity(delta):
 	velocity.y += grav * delta
+
+func _apply_movement():
 	velocity = move_and_slide(velocity, Vector2.UP, false, 4, PI/4, false)
+	if abs(velocity.x) < 0.2:
+		velocity.x = 0
+	
 	is_grounded = check_if_grounded()
 	
 	is_on_wall = check_walls()
@@ -85,35 +87,17 @@ func _physics_process(delta):
 		if sign($Position2D.position.x) == -1:
 			$Position2D.position.x *= -1
 
-func _input(event):
-	if event.is_action_pressed("ui_accept") && is_grounded && jump && !cut_scene:
-		velocity.y = max_jump_velocity
-		$AudioStreamPlayer.stream = load("res://Sounds/Jump.wav")
-		$AudioStreamPlayer.play()
-	if event.is_action_released("ui_accept") && velocity.y < min_jump_velocity:
-		velocity.y = min_jump_velocity
-
 func check_if_grounded():
 	if raycast1.is_colliding() || raycast2.is_colliding():
 		return true
 	else:
 		return false
 
-func get_input():
+func _handle_move_input():
 	direction = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
 	velocity.x = lerp(velocity.x, move_speed * direction, get_h_weight())
 	if direction != 0:
 		$Sprite.scale.x = direction
-
-func animation_player():
-	if is_shooting:
-		$Sprite.play("shoot")
-	elif is_grounded && direction != 0:
-		$Sprite.play("walk")
-	elif !is_grounded:
-		$Sprite.play("jump")
-	else:
-		$Sprite.play("idle")
 
 func _on_Area2D_area_entered(area):
 	if area.is_in_group("hazard"):
