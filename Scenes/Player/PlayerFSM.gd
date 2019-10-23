@@ -34,6 +34,8 @@ func _get_transition(delta):
 					return states.fall
 			elif parent.velocity.x != 0:
 				return states.run
+			elif parent.is_shooting:
+				return states.shoot
 		states.run:
 			if !parent.is_on_floor():
 				if parent.velocity.y < 0:
@@ -42,30 +44,44 @@ func _get_transition(delta):
 					return states.fall
 			elif parent.velocity.x == 0:
 				return states.idle
+			elif parent.is_shooting:
+				return states.shoot
 		states.jump:
 			if parent.is_on_floor():
 				return states.idle
 			elif parent.velocity.y >= 0:
 				return states.fall
+			elif parent.is_shooting:
+				return states.shoot
 		states.fall:
 			if parent.is_on_floor():
 				return states.idle
 			elif parent.velocity.y < 0:
 				return states.jump
+			elif parent.is_shooting:
+				return states.shoot
+		states.shoot:
+			if parent.anim_player.is_playing:
+				return states.idle
 	return null
 
 func _enter_state(new_state, old_state):
 	match new_state:
 		states.idle:
 			print("Idle")
+			parent.anim_player.play("idle")
 		states.run:
 			print("Run")
+			parent.anim_player.play("walk")
 		states.jump:
 			print("Jump")
+			parent.anim_player.play("jump")
 		states.fall:
 			print("Fall")
+			# parent.animation_player.play("idle")
 		states.shoot:
 			print("Shoot")
+			parent.animation_player.play("shoot")
 
 func _exit_state(old_state, new_state):
 	pass

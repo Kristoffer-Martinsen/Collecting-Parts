@@ -103,6 +103,7 @@ ui_shoot={
 [rendering]
 
 quality/driver/driver_name="GLES2"
+quality/driver/fallback_to_gles2=true
 quality/2d/gles2_use_nvidia_rect_flicker_workaround=true
 quality/intended_usage/framebuffer_allocation=0
 environment/default_clear_color=Color( 0.12549, 0.27451, 0.192157, 1 )

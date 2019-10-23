@@ -42,6 +42,9 @@ var is_grounded = false
 onready var raycast1 = $RayCast2D
 onready var raycast2 = $RayCast2D2
 
+# Animation
+onready var anim_player = $Sprite
+
 # WALL JUMPING
 onready var left_wall_raycast = $LeftRaycast
 onready var right_wall_raycast = $RightRaycast
@@ -205,7 +208,6 @@ func _on_ShootTimer_timeout():
 
 func _on_Sprite_animation_finished():
 	is_shooting = false
-
 
 
 func _on_Win_body_entered(body):

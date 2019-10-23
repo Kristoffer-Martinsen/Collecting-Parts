@@ -232,7 +232,6 @@ __meta__ = {
 "player",
 ] instance=ExtResource( 3 )]
 position = Vector2( 288, 32 )
-attack = false
 
 [node name="Boulder" parent="." instance=ExtResource( 4 )]
 position = Vector2( 432, 336 )
