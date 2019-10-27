@@ -5,6 +5,7 @@ func _ready():
 	add_state("run")
 	add_state("jump")
 	add_state("fall")
+	add_state("dead")
 	add_state("shoot")
 	call_deferred("set_state", states.idle)
 
@@ -75,12 +76,14 @@ func _enter_state(new_state, old_state):
 			parent.anim_player.play("walk")
 		states.jump:
 			print("Jump")
+			parent._play_sound("Jump.wav")
 			parent.anim_player.play("jump")
 		states.fall:
 			print("Fall")
 			# parent.animation_player.play("idle")
 		states.shoot:
 			print("Shoot")
+			parent._play_sound("shot")
 			parent.animation_player.play("shoot")
 
 func _exit_state(old_state, new_state):

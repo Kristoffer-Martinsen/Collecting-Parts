@@ -48,7 +48,7 @@ onready var anim_player = $Sprite
 # WALL JUMPING
 onready var left_wall_raycast = $LeftRaycast
 onready var right_wall_raycast = $RightRaycast
-const WALL_VELOCITY = Vector2(10*16, 8*-16)
+const WALL_VELOCITY = Vector2(11*16, 10*-16)
 var is_on_wall = false
 var wall_direction = 1
 
@@ -102,6 +102,12 @@ func _handle_move_input():
 	if direction != 0:
 		$Sprite.scale.x = direction
 
+func _play_sound(sound):
+	$AudioStreamPlayer.stream = load("res://Sounds/" + sound)
+	$AudioStreamPlayer.play()
+	pass
+
+
 func _on_Area2D_area_entered(area):
 	if area.is_in_group("hazard"):
 		emit_signal("killed")
@@ -112,73 +118,33 @@ func _on_Area2D_area_entered(area):
 		checkpoint = Vector2(area.position.x, area.position.y)
 		$AudioStreamPlayer.stream = load("res://Sounds/Checkpoint.wav")
 		$AudioStreamPlayer.play()
-		pass
+	if area.is_in_group("powerup"):
+		_play_sound("Powerup.wav")
+		if area.get_name() == "WalkPowerup":
+			walk = true
+			print(walk)
+		elif area.get_name() == "JumpPowerup":
+			jump = true
+			print(jump)
+		elif area.get_name() == "PushPowerup":
+			push = true
+			inertia = 10
+		elif area.get_name() == "WallJumpPowerup":
+			wall_jump = true
+		elif area.get_name() == "AttackPowerup":
+			attack = true
 
-func _on_JumpPower_body_entered(body):
-	# Sound
-	$AudioStreamPlayer.stream = load("res://Sounds/Powerup.wav")
-	$AudioStreamPlayer.play()
-	# Setting ablitiy flag as true
-	jump = true
-	
-	# Send signal to show pick up text
-	connect("module_aquired", $Textbox, "module_pickup")
-	emit_signal("module_aquired", "JUMP MODULE AQUIRED")
 
-func _on_PushPowerup_body_entered(body):
-	# Sound
-	$AudioStreamPlayer.stream = load("res://Sounds/Powerup.wav")
-	$AudioStreamPlayer.play()
-	# Setting abiliy flag and pushing power
-	push = true
-	inertia = 10
-	
-	# Send signal to show pick up text
-	connect("module_aquired", $Textbox, "module_pickup")
-	emit_signal("module_aquired", "PUSH MODULE AQUIRED")
-
-func _on_WalkPowerup_body_entered(body):
-	# Sound
-	$AudioStreamPlayer.stream = load("res://Sounds/Powerup.wav")
-	$AudioStreamPlayer.play()
-	
-	# setting ability flag
-	walk = true
-	
-	# Send signal to show pick up text
-	connect("module_aquired", $Textbox, "module_pickup")
-	emit_signal("module_aquired", "MOVEMENT MODULE AQUIRED")
-
-func _on_Wall_jump_powerUp_body_entered(body):
-	# Sound
-	$AudioStreamPlayer.stream = load("res://Sounds/Powerup.wav")
-	$AudioStreamPlayer.play()
-	# Setting ability flag
-	wall_jump = true
-	
-	# Send signal to show pick up text
-	connect("module_aquired", $Textbox, "module_pickup")
-	emit_signal("module_aquired", "WALL JUMP MODULE AQUIRED")
-
-func _on_AttackPowerup_body_entered(body):
-	# Sound
-	$AudioStreamPlayer.stream = load("res://Sounds/Powerup.wav")
-	$AudioStreamPlayer.play()
-	# Setting ability flag
-	attack = true
-	
-	# Send signal to show pick up text
-	connect("module_aquired", $Textbox, "module_pickup")
-	emit_signal("module_aquired", "ATTACK MODULE AQUIRED")
-
+#	# Send signal to show pick up text
+#	connect("module_aquired", $Textbox, "module_pickup")
+#	emit_signal("module_aquired", "ATTACK MODULE AQUIRED")
 func wall_jump():
 	var wall_jump_velocity = WALL_VELOCITY
 	wall_jump_velocity.x *= -wall_direction
 	velocity = wall_jump_velocity
-	pass
 
 func get_h_weight():
-	return 0.2 if is_grounded else 0.05
+	return 0.2 if is_grounded else 0.1
 
 func check_walls():
 	if left_wall_raycast.is_colliding():
@@ -208,7 +174,6 @@ func _on_ShootTimer_timeout():
 
 func _on_Sprite_animation_finished():
 	is_shooting = false
-
 
 func _on_Win_body_entered(body):
 		# Send signal to show pick up text
