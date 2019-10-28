@@ -14,6 +14,9 @@ signal module_aquired()
 # Checkpoint vector
 var checkpoint = Vector2(288,26) 
 
+# Health
+var health = 3
+
 # Bullet
 var can_shoot = true
 var shoot_direction = 1
@@ -102,11 +105,9 @@ func _handle_move_input():
 	if direction != 0:
 		$Sprite.scale.x = direction
 
-func _play_sound(sound):
-	$AudioStreamPlayer.stream = load("res://Sounds/" + sound)
+func _play_sound(pathToSound):
+	$AudioStreamPlayer.stream = load(pathToSound)
 	$AudioStreamPlayer.play()
-	pass
-
 
 func _on_Area2D_area_entered(area):
 	if area.is_in_group("hazard"):
@@ -119,7 +120,7 @@ func _on_Area2D_area_entered(area):
 		$AudioStreamPlayer.stream = load("res://Sounds/Checkpoint.wav")
 		$AudioStreamPlayer.play()
 	if area.is_in_group("powerup"):
-		_play_sound("Powerup.wav")
+		_play_sound("res://Sounds/Powerup.wav")
 		if area.get_name() == "WalkPowerup":
 			walk = true
 			print(walk)
@@ -170,13 +171,11 @@ func shoot():
 
 func _on_ShootTimer_timeout():
 	can_shoot = true
-	pass # Replace with function body.
 
 func _on_Sprite_animation_finished():
 	is_shooting = false
 
 func _on_Win_body_entered(body):
-		# Send signal to show pick up text
+	# Send signal to show pick up text
 	connect("module_aquired", $Textbox, "module_pickup")
 	emit_signal("module_aquired", "YOU ESCAPED CONGRATULATIONS")
-	pass # Replace with function body.

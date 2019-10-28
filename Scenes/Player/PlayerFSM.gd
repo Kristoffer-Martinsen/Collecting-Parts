@@ -28,7 +28,9 @@ func _state_logic(delta):
 func _get_transition(delta):
 	match state:
 		states.idle:
-			if !parent.is_on_floor():
+			if parent.health <= 0:
+				return states.dead
+			elif !parent.is_on_floor():
 				if parent.velocity.y < 0:
 					return states.jump
 				elif parent.velocity.y > 0:
@@ -38,7 +40,9 @@ func _get_transition(delta):
 			elif parent.is_shooting:
 				return states.shoot
 		states.run:
-			if !parent.is_on_floor():
+			if parent.health <= 0:
+				return states.dead
+			elif !parent.is_on_floor():
 				if parent.velocity.y < 0:
 					return states.jump
 				elif parent.velocity.y > 0:
@@ -48,21 +52,27 @@ func _get_transition(delta):
 			elif parent.is_shooting:
 				return states.shoot
 		states.jump:
-			if parent.is_on_floor():
+			if parent.health <= 0:
+				return states.dead
+			elif parent.is_on_floor():
 				return states.idle
 			elif parent.velocity.y >= 0:
 				return states.fall
 			elif parent.is_shooting:
 				return states.shoot
 		states.fall:
-			if parent.is_on_floor():
+			if parent.health <= 0:
+				return states.dead
+			elif parent.is_on_floor():
 				return states.idle
 			elif parent.velocity.y < 0:
 				return states.jump
 			elif parent.is_shooting:
 				return states.shoot
 		states.shoot:
-			if parent.anim_player.is_playing:
+			if parent.health <= 0:
+				return states.dead
+			elif !parent.anim_player.is_playing():
 				return states.idle
 	return null
 
@@ -76,15 +86,15 @@ func _enter_state(new_state, old_state):
 			parent.anim_player.play("walk")
 		states.jump:
 			print("Jump")
-			parent._play_sound("Jump.wav")
+			parent._play_sound("res://Sounds/Jump.wav")
 			parent.anim_player.play("jump")
 		states.fall:
 			print("Fall")
 			# parent.animation_player.play("idle")
 		states.shoot:
 			print("Shoot")
-			parent._play_sound("shot")
-			parent.animation_player.play("shoot")
+			parent._play_sound("res://Sounds/Shot.wav")
+			parent.anim_player.play("shoot")
 
 func _exit_state(old_state, new_state):
 	pass

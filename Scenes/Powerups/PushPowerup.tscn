@@ -19,3 +19,4 @@ shape = SubResource( 1 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 48, 64, 16, 16 )
+[connection signal="body_entered" from="." to="." method="_on_PushPowerup_body_entered"]

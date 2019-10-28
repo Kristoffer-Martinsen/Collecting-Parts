@@ -232,6 +232,11 @@ __meta__ = {
 "player",
 ] instance=ExtResource( 3 )]
 position = Vector2( 288, 32 )
+walk = true
+jump = true
+push = true
+wall_jump = true
+attack = true
 inertia = 10
 
 [node name="Boulder" parent="." instance=ExtResource( 4 )]
@@ -241,7 +246,6 @@ position = Vector2( 432, 336 )
 position = Vector2( 288, 400 )
 
 [node name="Powerups" type="Node" parent="."]
-editor/display_folded = true
 
 [node name="WallJumpPowerup" parent="Powerups" groups=[
 "powerup",
