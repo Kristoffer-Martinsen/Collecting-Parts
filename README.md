@@ -5,3 +5,5 @@ Made in 48 hours for the Ludum Dare 45 (Theme: Starting with nothing). Made with
 scripting language GDScript. (Python like in its syntax)
 
 A platformer where you need to collect modules for all your actions in order to escape.
+
+Link to the itch page to try out the game: https://ldjam.com/events/ludum-dare/45/collecting-parts
